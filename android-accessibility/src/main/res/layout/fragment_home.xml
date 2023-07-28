@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:paddingVertical="@dimen/activity_vertical_margin"
+    tools:context=".HomeFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/content_labeling_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_content_labeling" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/content_grouping_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_content_grouping" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/live_region_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_live_region" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/expand_touch_area_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_expand_touch_area" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/insufficient_contrast_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_insufficient_contrast" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/counter_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/counter_screen" />
+</LinearLayout>

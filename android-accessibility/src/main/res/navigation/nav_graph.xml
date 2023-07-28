@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment" >
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mcmouse88.android_accessibility.HomeFragment"
+        android:label="@string/fragment_home"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_liveRegionFragment"
+            app:destination="@id/liveRegionFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_contentGroupingFragment"
+            app:destination="@id/contentGroupingFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_contentLabelingFragment"
+            app:destination="@id/contentLabelingFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_expandTouchAreaFragment"
+            app:destination="@id/expandTouchAreaFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_insufficientContrastFragment"
+            app:destination="@id/insufficientContrastFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_counterFragment"
+            app:destination="@id/counterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/liveRegionFragment"
+        android:name="com.mcmouse88.android_accessibility.LiveRegionFragment"
+        android:label="@string/fragment_live_region"
+        tools:layout="@layout/fragment_live_region" />
+
+    <fragment
+        android:id="@+id/contentGroupingFragment"
+        android:name="com.mcmouse88.android_accessibility.ContentGroupingFragment"
+        android:label="@string/fragment_content_grouping"
+        tools:layout="@layout/fragment_content_grouping" />
+
+    <fragment
+        android:id="@+id/contentLabelingFragment"
+        android:name="com.mcmouse88.android_accessibility.ContentLabelingFragment"
+        android:label="@string/fragment_content_labeling"
+        tools:layout="@layout/fragment_content_labeling" />
+
+    <fragment
+        android:id="@+id/expandTouchAreaFragment"
+        android:name="com.mcmouse88.android_accessibility.ExpandTouchAreaFragment"
+        android:label="@string/fragment_expand_touch_area"
+        tools:layout="@layout/fragment_expand_touch_area" />
+
+    <fragment
+        android:id="@+id/insufficientContrastFragment"
+        android:name="com.mcmouse88.android_accessibility.InsufficientContrastFragment"
+        android:label="@string/fragment_insufficient_contrast"
+        tools:layout="@layout/fragment_insufficient_contrast" />
+
+    <fragment
+        android:id="@+id/counterFragment"
+        android:name="com.mcmouse88.android_accessibility.CounterFragment"
+        android:label="@string/counter_screen"
+        tools:layout="@layout/fragment_counter" />
+</navigation>
