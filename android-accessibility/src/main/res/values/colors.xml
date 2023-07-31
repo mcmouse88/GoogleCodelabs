@@ -25,5 +25,5 @@
     <color name="colorAccentForCounter">#03DAC5</color>
     <color name="lightGreyForCounter">#EEEEEE</color>
     <color name="greyForCounter">#999999</color>
-    <color name="darkGreyForCounter">#444444</color>
+    <color name="darkGreyForCounter">#666666</color>
 </resources>
