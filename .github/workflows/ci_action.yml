@@ -3,27 +3,32 @@ name: GitHub_Action_CI
 on:
   push:
     branches:
-      - main
+      - master
 
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: 17
 
       - name: Lint
         run: |
           chmod +x ./gradlew
-          ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+          ./gradlew lintDebug
 
       - name: Build
         run: ./gradlew assembleRelease
 
       - name: Run Test
-        run: ./gradlew -Pci --console=plain :app:testDebug
+        run: ./gradlew test
