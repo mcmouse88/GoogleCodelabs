@@ -1,0 +1,29 @@
+name: GitHub_Action_CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Lint
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+
+      - name: Build
+        run: ./gradlew assembleRelease
+
+      - name: Run Test
+        run: ./gradlew -Pci --console=plain :app:testDebug
