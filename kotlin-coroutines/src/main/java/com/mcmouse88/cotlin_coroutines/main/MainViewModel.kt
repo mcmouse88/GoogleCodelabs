@@ -3,8 +3,11 @@ package com.mcmouse88.cotlin_coroutines.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mcmouse88.cotlin_coroutines.utils.BACKGROUND
+import androidx.lifecycle.viewModelScope
 import com.mcmouse88.cotlin_coroutines.utils.singleArgViewModelFactory
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * MainViewModel designed to store and manage UI-related data in a lifecycle conscious way. This
@@ -85,11 +88,15 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
      * Wait one second then update the tap count.
      */
     private fun updateTaps() {
-        // TODO: Convert updateTaps to use coroutines
-        tapCount++
-        BACKGROUND.submit {
-            Thread.sleep(1_000)
+        // launch a coroutine in viewModelScope
+        viewModelScope.launch {
+            tapCount++
+            // suspend this coroutine for one second
+            delay(1_000)
+            // resume in the main dispatcher
+            // _snackbar.value can be called directly from main thread
             _taps.postValue("$tapCount taps")
+
         }
     }
 
@@ -104,18 +111,21 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
      * Refresh the title, showing a loading spinner while it refreshes and errors via snackbar.
      */
     private fun refreshTitle() {
-        // TODO: Convert refreshTitle to use coroutines
-        _spinner.value = true
-        repository.refreshTitleWithCallback(object : TitleRefreshCallback {
+        launchDataLoad {
+            repository.refreshTitle()
+        }
+    }
 
-            override fun onCompleted() {
-                _spinner.postValue(false)
+    private fun launchDataLoad(block: suspend () -> Unit): Job {
+        return viewModelScope.launch {
+            try {
+                _spinner.value = true
+                block.invoke()
+            } catch (error: TitleRefreshError) {
+                _snackbar.value = error.message
+            } finally {
+                _spinner.value = false
             }
-
-            override fun inError(cause: Throwable) {
-                _snackbar.postValue(cause.message)
-                _spinner.postValue(false)
-            }
-        })
+        }
     }
 }

@@ -31,4 +31,4 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Run Test
-        run: ./gradlew test
+        run: ./gradlew testDebug

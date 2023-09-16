@@ -24,7 +24,7 @@ data class Title constructor(val title: String, @PrimaryKey val id: Int = 0)
 @Dao
 interface TitleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTitle(title: Title)
+    suspend fun insertTitle(title: Title)
 
     @get:Query("SELECT * FROM Title WHERE id = 0")
     val titleLiveData: LiveData<Title?>
