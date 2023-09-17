@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         google()
@@ -13,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "GoogleCodelab"
-include ':android-accessibility'
-include ':kotlin-coroutines'
+include(":android-accessibility")
+include (":kotlin-coroutines")
