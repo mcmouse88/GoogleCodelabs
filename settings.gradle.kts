@@ -17,3 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "GoogleCodelab"
 include(":android-accessibility")
 include (":kotlin-coroutines")
+include(":coroutine-advanced")
+include(":coroutine-advanced:sunflower")
