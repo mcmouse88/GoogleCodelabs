@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":testing-basics")
+
+
 pluginManagement {
     repositories {
         google()
