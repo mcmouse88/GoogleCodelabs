@@ -11,7 +11,7 @@ workVersion = "2.8.1"
 roomVersion = "2.5.2"
 retrofitVersion = "2.9.0"
 espressoVersion = "3.5.1"
-glideVersion = "4.14.2"
+glideVersion = "4.15.1"
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.1.1" }

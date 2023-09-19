@@ -40,6 +40,10 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    lint {
+        lintConfig = file("$rootDir/suppress_lint_glide_notification.xml")
+    }
 }
 
 dependencies {
