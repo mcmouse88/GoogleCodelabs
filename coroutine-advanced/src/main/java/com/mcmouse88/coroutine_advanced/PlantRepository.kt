@@ -11,6 +11,12 @@ import com.mcmouse88.sunflower.Plant
 import com.mcmouse88.sunflower.utils.CacheOnSuccess
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 /**
@@ -33,6 +39,16 @@ class PlantRepository private constructor(
     }
 
     /**
+     * The transform onStart will happen when an observer listens before other operators, and it
+     * can emit placeholder values. So here we're emitting an empty list, delaying calling
+     * getOrAwait by 1500ms, then continuing the original flow. If you run the app now, you'll see
+     * that the Room database query returns right away, combining with the empty list (which means
+     * it'll sort alphabetically). Then around 1500ms later, it applies the custom sort.
+     */
+    private val customSortFlow: Flow<List<String>> = plantsListSortOrderCache::getOrAwait.asFlow()
+        // .onStart { emit(listOf()); delay(1_500) }
+
+    /**
      * Fetch a list of [Plant]s from the database.
      * Returns a LiveData-wrapped List of Plants.
      */
@@ -53,6 +69,27 @@ class PlantRepository private constructor(
                 emit(plantList.applyMainSafeSort(customSortOrder))
             }
         }
+    }
+
+    val plantsFlow: Flow<List<Plant>>
+        get() = plantDao.getPlantsFlow()
+            // When the result of customSortFlow is available, this will combine it with the latest
+            // value from the flow above. Thus, as long as both plants and sortOrder are have an
+            // initial value (their flow has emitted at least one value), any change to either
+            // plants or sortOrder will call plants.applySort(sortOrder).
+            .combine(customSortFlow) { plants, sortOrder ->
+                plants.applySort(sortOrder)
+            }
+            .flowOn(defaultDispatcher)
+            .conflate()
+
+    fun getPlantsWithGrowZoneFlow(growZoneNumber: GrowZone): Flow<List<Plant>> {
+        return plantDao.getPlantsWithGrowZoneNumberFlow(growZoneNumber.number)
+            .map { plantList ->
+                val sortOrderFromNetwork = plantsListSortOrderCache.getOrAwait()
+                val nextValue = plantList.applyMainSafeSort(sortOrderFromNetwork)
+                nextValue
+            }
     }
 
     /**

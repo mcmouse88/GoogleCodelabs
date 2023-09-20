@@ -3,17 +3,26 @@ package com.mcmouse88.coroutine_advanced
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.mcmouse88.sunflower.GrowZone
 import com.mcmouse88.sunflower.NoGrowZone
 import com.mcmouse88.sunflower.Plant
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
  * The [ViewModel] for fetching a list of [Plant]s.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class PlantListViewModel internal constructor(
     private val repository: PlantRepository
 ) : ViewModel() {
@@ -58,9 +67,39 @@ class PlantListViewModel internal constructor(
         }
     }
 
+    private val growZoneFlow = MutableStateFlow(NoGrowZone)
+
+    // add a new property to plantListViewModel
+    val plantsUsingFlow: LiveData<List<Plant>> = growZoneFlow.flatMapLatest { growZone ->
+        if (growZone == NoGrowZone) {
+            repository.plantsFlow
+        } else {
+            repository.getPlantsWithGrowZoneFlow(growZone)
+        }
+    }.asLiveData()
+
     init {
         // When creating a new ViewModel, clear the grow zone and perform any related udpates
         clearGrowZoneNumber()
+
+        growZoneFlow.mapLatest { growZone ->
+            _spinner.value = true
+            if (growZone == NoGrowZone) {
+                repository.tryUpdateRecentPlantsCache()
+            } else {
+                repository.tryUpdateRecentPlantsForGrowZoneCache(growZone)
+            }
+        }
+            .onEach { _spinner.value = false }
+            .catch { cause ->
+                _snackbar.value = cause.message
+                _spinner.value = false
+            }
+            .launchIn(viewModelScope)
+
+        // fetch the full plant list
+        // this code is no longer needed
+        // launchDataLoad { repository.tryUpdateRecentPlantsCache() }
     }
 
     /**
@@ -71,9 +110,11 @@ class PlantListViewModel internal constructor(
      */
     fun setGrowZoneNumber(num: Int) {
         growZone.value = GrowZone(num)
+        growZoneFlow.value = GrowZone(num)
 
         // initial code version, will move during flow rewrite
-        launchDataLoad { repository.tryUpdateRecentPlantsCache() }
+        // this code is no longer needed
+        // launchDataLoad { repository.tryUpdateRecentPlantsForGrowZoneCache(GrowZone(num)) }
     }
 
     /**
@@ -84,9 +125,11 @@ class PlantListViewModel internal constructor(
      */
     fun clearGrowZoneNumber() {
         growZone.value = NoGrowZone
+        growZoneFlow.value = NoGrowZone
 
         // Initial code version, will move during flow rewrite
-        launchDataLoad { repository.tryUpdateRecentPlantsCache() }
+        // this code is no longer needed
+        // launchDataLoad { repository.tryUpdateRecentPlantsCache() }
     }
 
     /**
