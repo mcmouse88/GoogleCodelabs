@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.mcmouse88.testing_basics.add_edit_task.AddEditTaskViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.mcmouse88.testing_basics.ScrollChildRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:enabled="@{viewModel.dataLoading}"
+            app:refreshing="@{viewModel.dataLoading}" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                    android:paddingVertical="@dimen/activity_vertical_margin"
+                    android:visibility="@{viewModel.dataLoading ? View.GONE : View.VISIBLE}" >
+
+                    <EditText
+                        android:id="@+id/et_add_task_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="@string/title_hint"
+                        android:imeOptions="flagNoExtractUi"
+                        android:maxLines="1"
+                        android:text="@{viewModel.title}"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                    <EditText
+                        android:id="@+id/et_add_task_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:hint="@string/description_hint"
+                        android:imeOptions="flagNoExtractUi"
+                        android:text="@{viewModel.description}" />
+                </LinearLayout>
+            </ScrollView>
+        </com.mcmouse88.testing_basics.ScrollChildRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_save_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_done"
+            app:fabSize="normal"
+            app:layout_anchor="@id/refresh_layout"
+            android:onClick="@{() -> viewModel.saveTask()}"
+            app:layout_anchorGravity="bottom|end" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
