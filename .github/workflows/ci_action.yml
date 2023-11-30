@@ -22,6 +22,12 @@ jobs:
           distribution: "adopt"
           java-version: 17
 
+      - name: Load Environment from secrets
+        env:
+          KEY_STORE: ${{ secrets.KEY_STORE }}
+        run: |
+          echo KEY_STORE=$KEY_STORE > ./macro-benchmark/debug.keystore
+
       - name: Lint
         run: |
           chmod +x ./gradlew
