@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":theming-compose")
+
+
 include(":jetpack-compose-basic")
 
 
