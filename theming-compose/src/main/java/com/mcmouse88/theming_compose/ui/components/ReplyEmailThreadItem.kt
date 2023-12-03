@@ -1,5 +1,6 @@
 package com.mcmouse88.theming_compose.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ fun ReplyEmailThreadItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background)
             .padding(20.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
