@@ -46,8 +46,14 @@ fun ReplyEmailThreadItem(
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = email.sender.firstName)
-                Text(text = stringResource(id = R.string.twenty_mins_ago))
+                Text(
+                    text = email.sender.firstName,
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Text(
+                    text = stringResource(id = R.string.twenty_mins_ago),
+                    style = MaterialTheme.typography.labelMedium
+                )
             }
             IconButton(
                 onClick = { /*TODO: Click Implementation*/ },
@@ -63,10 +69,15 @@ fun ReplyEmailThreadItem(
 
         Text(
             text = email.subject,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
         )
 
-        Text(text = email.body)
+        Text(
+            text = email.body,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()

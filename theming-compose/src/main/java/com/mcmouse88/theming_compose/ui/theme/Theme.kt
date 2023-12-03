@@ -109,6 +109,7 @@ fun GoogleCodelabTheme(
 
     MaterialTheme(
         colorScheme = colors,
+        typography = typography,
         content = content
     )
 }
