@@ -1,11 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":theming-compose")
-
-
-include(":jetpack-compose-basic")
-
-
 pluginManagement {
     repositories {
         google()
@@ -21,7 +15,11 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "GoogleCodelab"
-include(":android-accessibility")
-include (":kotlin-coroutines")
-include(":coroutine-advanced")
-include(":coroutine-advanced:sunflower")
+include(
+    ":android-accessibility",
+    ":kotlin-coroutines",
+    ":coroutine-advanced",
+    ":coroutine-advanced:sunflower",
+    ":jetpack-compose-basic",
+    ":theming-compose"
+)
