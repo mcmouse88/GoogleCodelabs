@@ -21,5 +21,6 @@ include(
     ":coroutine-advanced",
     ":coroutine-advanced:sunflower",
     ":jetpack-compose-basic",
-    ":theming-compose"
+    ":theming-compose",
+    ":basic-layout-compose"
 )
