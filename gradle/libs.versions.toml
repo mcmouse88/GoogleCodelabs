@@ -98,6 +98,7 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended"}
+androidx-compose-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class", version = "1.1.2" }
 
 [bundles]
 navigationComponent = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx"]
