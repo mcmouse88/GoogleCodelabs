@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -32,7 +33,10 @@ fun ReplySearchBar(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(
+                color = MaterialTheme.colorScheme.background,
+                shape = CircleShape
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
