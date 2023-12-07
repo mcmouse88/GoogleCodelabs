@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">JetpackComposeState</string>
+    <string name="you_ve_had_of_glasses">You\'ve had %1$s of glasses.</string>
+    <string name="add_one">Add one</string>
+    <string name="close">Close</string>
+    <string name="clear_water_count">Clear water count</string>
+    <string name="have_you_taken_your_15_minutes_walk_today">Have you taken your 15 minutes walk today?</string>
+</resources>
