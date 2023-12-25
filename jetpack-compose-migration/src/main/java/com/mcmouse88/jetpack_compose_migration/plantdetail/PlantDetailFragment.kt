@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
@@ -19,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mcmouse88.jetpack_compose_migration.R
 import com.mcmouse88.jetpack_compose_migration.data.Plant
 import com.mcmouse88.jetpack_compose_migration.databinding.FragmentPlantDetailBinding
+import com.mcmouse88.jetpack_compose_migration.theme.SunflowerTheme
 import com.mcmouse88.jetpack_compose_migration.utilities.InjectorUtils
 import com.mcmouse88.jetpack_compose_migration.viewmodels.PlantDetailViewModel
 
@@ -101,7 +101,7 @@ class PlantDetailFragment : Fragment() {
                     ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
                 )
                 setContent {
-                    MaterialTheme {
+                    SunflowerTheme {
                         PlantDetailDescription(plantDetailViewModel)
                     }
                 }

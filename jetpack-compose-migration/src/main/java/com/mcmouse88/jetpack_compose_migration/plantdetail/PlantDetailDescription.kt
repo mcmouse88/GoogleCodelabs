@@ -24,6 +24,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.mcmouse88.jetpack_compose_migration.R
 import com.mcmouse88.jetpack_compose_migration.data.Plant
+import com.mcmouse88.jetpack_compose_migration.theme.SunflowerTheme
 import com.mcmouse88.jetpack_compose_migration.viewmodels.PlantDetailViewModel
 
 @Composable
@@ -63,7 +64,7 @@ private fun PlantDetailContentPreview() {
         imageUrl = ""
     )
 
-    MaterialTheme {
+    SunflowerTheme {
         PlantDetailContent(plant = plant)
     }
 }
@@ -83,7 +84,7 @@ private fun PlantName(name: String) {
 @Preview
 @Composable
 private fun PlantNamePreview() {
-    MaterialTheme {
+    SunflowerTheme {
         PlantName(name = "Apple")
     }
 }
@@ -123,7 +124,7 @@ private fun PlantWatering(wateringInterval: Int) {
 @Preview
 @Composable
 private fun PlantWateringPreview() {
-    MaterialTheme {
+    SunflowerTheme {
         PlantWatering(wateringInterval = 7)
     }
 }
@@ -154,7 +155,7 @@ private fun PlantDescription(
 @Preview
 @Composable
 private fun PlantDescriptionPreview() {
-    MaterialTheme {
+    SunflowerTheme {
         PlantDescription(description = "HTML<br><br>description")
     }
 }
