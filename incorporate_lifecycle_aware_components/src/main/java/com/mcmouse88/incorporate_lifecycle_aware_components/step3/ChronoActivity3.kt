@@ -29,6 +29,6 @@ class ChronoActivity3 : AppCompatActivity() {
             findViewById<TextView>(R.id.timer_textview).text = newText
             Log.d("ChronoActivity3", "Updating timer")
         }
-        //TODO: observe the ViewModel's elapsed time
+        mLiveDataTimerViewModel.elapsedTime.observe(this, elapsedTimeObserver)
     }
 }
