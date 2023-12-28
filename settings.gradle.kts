@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":jetpack-compose-state")
-
-
 pluginManagement {
     repositories {
         google()
@@ -25,5 +22,7 @@ include(
     ":coroutine-advanced:sunflower",
     ":jetpack-compose-basic",
     ":theming-compose",
-    ":basic-layout-compose"
+    ":basic-layout-compose",
+    ":jetpack-compose-state",
+    ":incorporate_lifecycle_aware_components"
 )
