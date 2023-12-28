@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lifecycle codelab</string>
+    <string name="seconds">%d seconds elapsed</string>
+    <string name="location">Location</string>
+    <string name="saved_in_vm">Saved in ViewModel: %s</string>
+    <string name="initial_name">No one</string>
+    <string name="lat_lon">%1$d , %2$d</string>
+</resources>
