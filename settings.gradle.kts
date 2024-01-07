@@ -24,5 +24,6 @@ include(
     ":theming-compose",
     ":basic-layout-compose",
     ":jetpack-compose-state",
-    ":incorporate_lifecycle_aware_components"
+    ":incorporate_lifecycle_aware_components",
+    ":animating-elements-in-jetpack-compose"
 )
