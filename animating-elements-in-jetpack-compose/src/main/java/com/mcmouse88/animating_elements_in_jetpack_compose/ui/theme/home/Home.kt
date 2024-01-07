@@ -1,6 +1,7 @@
 package com.mcmouse88.animating_elements_in_jetpack_compose.ui.theme.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -149,7 +150,10 @@ fun Home() {
 
     // The background color. The value is changed by the current tab.
     // TODO 1: Animate this color change.
-    val backgroundColor = if (tabPage == TabPage.Home) Seashell else GreenLight
+    val backgroundColor by animateColorAsState(
+        targetValue = if (tabPage == TabPage.Home) Seashell else GreenLight,
+        label = "background color"
+    )
 
     // The coroutine scope for event handlers calling suspend functions.
     val coroutineScope = rememberCoroutineScope()
