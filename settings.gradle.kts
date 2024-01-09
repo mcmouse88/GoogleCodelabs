@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":testing-jetpack-compose")
+
+
 pluginManagement {
     repositories {
         google()
