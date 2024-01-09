@@ -1,6 +1,9 @@
 package com.mcmouse88.testing_jetpack_compose
 
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onRoot
@@ -40,9 +43,14 @@ class TopAppBarTest {
             )
         }
 
-        onRoot().printToLog("currentLabelExists")
+        onRoot(useUnmergedTree = true).printToLog("currentLabelExists")
 
-        onNodeWithContentDescription(RallyScreen.Accounts.name)
-            .assertExists()
+        onNode(
+            hasText(RallyScreen.Accounts.name.uppercase()) and
+                    hasParent(
+                        hasContentDescription(RallyScreen.Accounts.name)
+                    ),
+            useUnmergedTree = true
+        ).assertExists()
     }
 }
