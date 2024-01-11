@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Chronometer
 import com.mcmouse88.incorporate_lifecycle_aware_components.R
 
+// https://developer.android.com/codelabs/android-lifecycles
+
 class ChronoActivity1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

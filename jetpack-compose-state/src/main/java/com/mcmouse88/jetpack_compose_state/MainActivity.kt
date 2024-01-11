@@ -9,6 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.mcmouse88.jetpack_compose_state.ui.theme.JetpackComposeStateTheme
 
+// https://developer.android.com/codelabs/jetpack-compose-state
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
