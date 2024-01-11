@@ -32,6 +32,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,10 +53,21 @@ fun PostCardHistory(
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
+    val showFewerLabel = stringResource(id = R.string.cd_show_fewer)
     Row(
-        modifier = Modifier.clickable(
-            onClickLabel = stringResource(id = R.string.action_read_article)
-        ) { navigateToArticle(post.id) }
+        modifier = Modifier
+            .clickable(
+                onClickLabel = stringResource(id = R.string.action_read_article)
+            ) { navigateToArticle(post.id) }
+            .semantics {
+                customActions = listOf(
+                    CustomAccessibilityAction(
+                        label = showFewerLabel,
+                        // action returns boolean to indicate success
+                        action = { openDialog = true; true }
+                    )
+                )
+            }
     ) {
         Image(
             painter = painterResource(id = post.imageThumbId),
@@ -81,10 +95,13 @@ fun PostCardHistory(
             }
         }
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            IconButton(onClick = { openDialog = true }) {
+            IconButton(
+                onClick = { openDialog = true },
+                modifier = Modifier.clearAndSetSemantics {  }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(id = R.string.cd_show_fewer)
+                    contentDescription = showFewerLabel
                 )
             }
         }
