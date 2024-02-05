@@ -1,14 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.kotlin)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.google.dagger.hilt.android)
 }
 
 android {
-    namespace = "com.mcmouse88.jetpack_compose_state"
+    namespace = "com.mcmouse88.android_privacy"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.mcmouse88.jetpack_compose_state"
+        applicationId = "com.mcmouse88.android_privacy"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -17,6 +19,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -59,12 +65,24 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.coil.kt.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.google.dagger.hilt.compiler)
+
+    implementation(libs.google.android.gms.play.services.location)
+    implementation(libs.bundles.camera)
 }

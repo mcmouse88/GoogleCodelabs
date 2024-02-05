@@ -27,5 +27,6 @@ include(
     ":incorporate_lifecycle_aware_components",
     ":animating-elements-in-jetpack-compose",
     ":testing-jetpack-compose",
-    ":accessibility-in-jetpack-compose"
+    ":accessibility-in-jetpack-compose",
+    ":android-privacy"
 )
