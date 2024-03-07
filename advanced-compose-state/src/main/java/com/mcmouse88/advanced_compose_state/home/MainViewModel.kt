@@ -29,18 +29,20 @@ class MainViewModel @Inject constructor(
     private val _suggestedDestinations = MutableStateFlow<List<ExploreModel>>(emptyList())
     val suggestedDestinations: StateFlow<List<ExploreModel>> = _suggestedDestinations.asStateFlow()
 
+    init {
+        _suggestedDestinations.tryEmit(destinationsRepository.destinations)
+    }
+
     fun updatePeople(people: Int) {
         viewModelScope.launch {
             if (people > MAX_PEOPLE) {
-                // TODO: Codelab Uncomment
-                // _suggestedDestinations.value = emptyList()
+                _suggestedDestinations.value = emptyList()
             } else {
                 val newDestinations = withContext(defaultDispatcher) {
                     destinationsRepository.destinations
                         .shuffled(Random(people * (1..100).shuffled().first()))
                 }
-                // TODO: Codelab uncomment
-                // _suggestedDestinations.value = newDestinations
+                _suggestedDestinations.value = newDestinations
             }
         }
     }
@@ -52,8 +54,7 @@ class MainViewModel @Inject constructor(
                     .filter { it.city.nameToDisplay.contains(newDestination) }
             }
 
-            // TODO: Codelab uncomment
-            // _suggestedDestinations.value = newDestinations
+            _suggestedDestinations.value = newDestinations
         }
     }
 }
