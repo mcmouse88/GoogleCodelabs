@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import com.mcmouse88.advanced_compose_state.base.CraneTabBar
 import com.mcmouse88.advanced_compose_state.base.CraneTabs
 import com.mcmouse88.advanced_compose_state.base.ExploreSection
 import com.mcmouse88.advanced_compose_state.data.ExploreModel
+import kotlinx.coroutines.launch
 
 typealias OnExploreItemClicked = (ExploreModel) -> Unit
 
@@ -45,12 +47,14 @@ fun CraneHome(
         scaffoldState = scaffoldState,
         modifier = Modifier.statusBarsPadding()
     ) { paddings ->
+        val scope = rememberCoroutineScope()
         CraneHomeContent(
             onExploreItemClicked = onExploreItemClicked,
             modifier = modifier.padding(paddings),
             openDrawer = {
-                // TODO: Codelab rememberCoroutineScope step - open the navigation drawer
-                // scaffoldState.drawerState.open()
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
             }
         )
     }
