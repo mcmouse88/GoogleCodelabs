@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mcmouse88.cotlin_coroutines"
+    namespace = "com.mcmouse88.kotlin_coroutines"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.mcmouse88.cotlin_coroutines"
+        applicationId = "com.mcmouse88.kotlin_coroutines"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
