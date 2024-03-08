@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AdvancedComposeState</string>
+
+    <string name="cd_menu">Menu</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_loading">Loading</string>
+    <string name="cd_drawer">Open drawer</string>
+    <string name="explore_fly">Explore Flights by Destinations</string>
+    <string name="explore_sleep">Explore Properties by Destinations</string>
+    <string name="explore_restaurants">Explore Restaurants by Destinations</string>
+</resources>
