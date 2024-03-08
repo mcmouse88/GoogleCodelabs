@@ -8,17 +8,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.mcmouse88.advanced_compose_state.R
 import com.mcmouse88.advanced_compose_state.base.CraneEditableUserInput
 import com.mcmouse88.advanced_compose_state.base.CraneUserInput
+import com.mcmouse88.advanced_compose_state.base.rememberEditableUserInputState
 import com.mcmouse88.advanced_compose_state.ui.theme.AdvancedStateComposeTheme
+import kotlinx.coroutines.flow.filter
 
 enum class PeopleUserInputAnimationState { Valid, Invalid }
 
@@ -77,12 +82,21 @@ fun FromDestination() {
 
 @Composable
 fun ToDestinationUserInput(onToDestinationChanged: (String) -> Unit) {
+    val editableUserInputState = rememberEditableUserInputState(hint = "Choose Destination")
     CraneEditableUserInput(
-        hint = "Choose Destination",
+        state = editableUserInputState,
         caption = "To",
-        vectorImageId = R.drawable.ic_plane,
-        onInputChanged = onToDestinationChanged
+        vectorImageId = R.drawable.ic_plane
     )
+
+    val currentOnDestinationChanged by rememberUpdatedState(newValue = onToDestinationChanged)
+    LaunchedEffect(key1 = editableUserInputState) {
+        snapshotFlow { editableUserInputState.text }
+            .filter { editableUserInputState.isHint.not() }
+            .collect {
+                currentOnDestinationChanged.invoke(editableUserInputState.text)
+            }
+    }
 }
 
 @Composable
