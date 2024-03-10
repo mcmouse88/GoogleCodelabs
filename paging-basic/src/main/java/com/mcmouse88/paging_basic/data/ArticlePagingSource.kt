@@ -2,11 +2,13 @@ package com.mcmouse88.paging_basic.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 import kotlin.math.max
 
 
 private const val STARTING_KEY = 0
+private const val LOAD_DELAY_MILLIS = 3_000L
 private val firstArticleCreatedTime = LocalDateTime.now()
 
 class ArticlePagingSource : PagingSource<Int, Article>() {
@@ -27,6 +29,9 @@ class ArticlePagingSource : PagingSource<Int, Article>() {
             )
         }
 
+        if (start != STARTING_KEY) {
+            delay(LOAD_DELAY_MILLIS)
+        }
         return LoadResult.Page(
             data = data,
             // Make sure we don't try to load items behind the STARTING_KEY
