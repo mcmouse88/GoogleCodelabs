@@ -23,4 +23,6 @@ class ArticleRepository {
             )
         }
     )
+
+    fun articlePagingSource(): ArticlePagingSource = ArticlePagingSource()
 }
