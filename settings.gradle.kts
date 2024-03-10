@@ -28,5 +28,6 @@ include(
     ":animating-elements-in-jetpack-compose",
     ":testing-jetpack-compose",
     ":accessibility-in-jetpack-compose",
-    ":advanced-compose-state"
+    ":advanced-compose-state",
+    ":paging-basic"
 )
