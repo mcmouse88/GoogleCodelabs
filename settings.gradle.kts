@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":paging-advanced")
+
+
 pluginManagement {
     repositories {
         google()
