@@ -7,9 +7,6 @@ import com.mcmouse88.paging_advanced.model.RepoSearchResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 
-// GitHub page API is 1 based: https://developer.github.com/v3/#pagination
-private const val GITHUB_STARTING_PAGE_INDEX = 1
-
 /**
  * Repository class that works with local and remote data sources.
  */
@@ -25,7 +22,7 @@ class GitHubRepository(
     private val searchResults = MutableSharedFlow<RepoSearchResult>(replay = 1)
 
     // keep the last requested page. When the request is successful, increment the page number.
-    private var lastRequestedPage = GITHUB_STARTING_PAGE_INDEX
+    private var lastRequestedPage =  1
 
     // avoid triggering multiple requests in the same time
     private var isRequestInProgress = false
