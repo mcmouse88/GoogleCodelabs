@@ -4,15 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.mcmouse88.paging_advanced.data.GitHubRepository
 import com.mcmouse88.paging_advanced.model.RepoSearchResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -41,14 +38,14 @@ class SearchReposViewModel(
             .distinctUntilChanged()
             .switchMap { queryString ->
                 liveData {
-                    val uiState = repository.getSearchResultStream(queryString)
+                    /*val uiState = repository.getSearchResultStream(queryString)
                         .map {
                             UiState(
                                 query = queryString,
                                 searchResult = it
                             )
                         }.asLiveData(Dispatchers.Main)
-                    emitSource(uiState)
+                    emitSource(uiState)*/
                 }
             }
 
@@ -59,7 +56,7 @@ class SearchReposViewModel(
                         val immutableQuery = queryLiveData.value
                         if (immutableQuery != null) {
                             viewModelScope.launch {
-                                repository.requestMore(immutableQuery)
+                               // repository.requestMore(immutableQuery)
                             }
                         }
                     }
