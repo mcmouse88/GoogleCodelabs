@@ -5,8 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -122,7 +124,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
     private fun ActivitySearchRepositoryBinding.updateRepoListFromInput(
         onQueryChanged: (UiAction.Search) -> Unit
     ) {
-        searchRepo.text.trim().let {
+        searchRepo.text?.trim()?.let {
             if (it.isNotEmpty()) {
                 onQueryChanged.invoke(UiAction.Search(query = it.toString()))
             }
@@ -140,6 +142,8 @@ class SearchRepositoriesActivity : AppCompatActivity() {
             }
         })
 
+        btnRetry.setOnClickListener { adapter.retry() }
+
         val notLoading = adapter.loadStateFlow
             // Only emit when REFRESH LoadState for the paging source changes.
             .distinctUntilChangedBy { it.source.refresh }
@@ -155,6 +159,34 @@ class SearchRepositoriesActivity : AppCompatActivity() {
             hasNotScrolledForCurrentSearch,
             Boolean::and
         ).distinctUntilChanged()
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collect { loadState ->
+                val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                // Show empty list
+                emptyList.isVisible = isListEmpty
+                // Only show the list if refresh succeeds
+                list.isVisible = !isListEmpty
+                // Show loading spinner during until load or refresh.
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                // Show the retry state if initial load or refresh fails.
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+
+                // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+
+                errorState?.let {
+                    Toast.makeText(
+                        this@SearchRepositoriesActivity,
+                        "\\uD83D\\uDE28 Oops ${it.error}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
 
         lifecycleScope.launch {
             pagingData.collectLatest(adapter::submitData)
