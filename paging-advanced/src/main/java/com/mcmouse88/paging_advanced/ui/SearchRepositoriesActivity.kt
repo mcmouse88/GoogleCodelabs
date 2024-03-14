@@ -70,8 +70,13 @@ class SearchRepositoriesActivity : AppCompatActivity() {
             this@SearchRepositoriesActivity,
             DividerItemDecoration.VERTICAL
         )
+
         binding.list.addItemDecoration(decoration)
-        list.adapter = adapter
+        list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ReposLoadStateAdapter { adapter.retry() },
+            footer = ReposLoadStateAdapter { adapter.retry() }
+        )
+
         bindSearch(
             uiState = uiState,
             onQueryChanged = uiActions
