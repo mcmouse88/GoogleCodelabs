@@ -2,8 +2,8 @@ package com.mcmouse88.paging_advanced.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import com.mcmouse88.paging_advanced.model.Repo
 
 /**
@@ -11,7 +11,7 @@ import com.mcmouse88.paging_advanced.model.Repo
  */
 class ReposAdapter(
     private val onItemClick: (String) -> Unit
-) : ListAdapter<Repo, RepoViewHolder>(REPO_COMPARATOR) {
+) : PagingDataAdapter<Repo, RepoViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,7 +20,9 @@ class ReposAdapter(
 
     override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
         val repoItem = getItem(position)
-        holder.bind(repoItem)
+        if (repoItem != null) {
+            holder.bind(repoItem)
+        }
     }
 
     companion object {
