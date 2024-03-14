@@ -7,13 +7,15 @@ import androidx.room.RoomDatabase
 import kotlin.concurrent.Volatile
 
 @Database(
-    entities = [RepoEntity::class],
+    entities = [RepoEntity::class, RemoteKeys::class],
     version = 1,
     exportSchema = false
 )
 abstract class RepoDatabase : RoomDatabase() {
 
     abstract fun reposDao(): ReposDao
+
+    abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
 
