@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.mcmouse88.paging_advanced.Injector
 import com.mcmouse88.paging_advanced.databinding.ActivitySearchRepositoryBinding
-import com.mcmouse88.paging_advanced.model.Repo
+import com.mcmouse88.paging_advanced.model.UiModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -65,7 +65,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
      */
     private fun ActivitySearchRepositoryBinding.bindState(
         uiState: StateFlow<UiState>,
-        pagingData: Flow<PagingData<Repo>>,
+        pagingData: Flow<PagingData<UiModel>>,
         uiActions: (UiAction) -> Unit
     ) {
         val decoration = DividerItemDecoration(
@@ -133,7 +133,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
 
     private fun ActivitySearchRepositoryBinding.bindList(
         uiState: StateFlow<UiState>,
-        pagingData: Flow<PagingData<Repo>>,
+        pagingData: Flow<PagingData<UiModel>>,
         onScrollChanged: (UiAction.Scroll) -> Unit
     ) {
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {

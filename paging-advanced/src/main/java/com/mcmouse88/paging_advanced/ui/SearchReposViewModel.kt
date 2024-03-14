@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
+import androidx.paging.map
 import com.mcmouse88.paging_advanced.data.GitHubRepository
-import com.mcmouse88.paging_advanced.model.Repo
+import com.mcmouse88.paging_advanced.model.UiModel
+import com.mcmouse88.paging_advanced.model.roundedStarCount
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +39,7 @@ class SearchReposViewModel(
      */
     val state: StateFlow<UiState>
 
-    val pagingDataFlow: Flow<PagingData<Repo>>
+    val pagingDataFlow: Flow<PagingData<UiModel>>
 
     /**
      * Processor of side effects from the UI which in turn feedback into [state]
@@ -91,8 +94,34 @@ class SearchReposViewModel(
         }
     }
 
-    private fun searchRepo(queryString: String): Flow<PagingData<Repo>> {
+    private fun searchRepo(queryString: String): Flow<PagingData<UiModel>> {
         return repository.getSearchResultStream(queryString)
+            .map { it.map(UiModel::RepoItem) }
+            .map { pagingData ->
+                pagingData.insertSeparators { before, after ->
+                    if (after == null) {
+                        // We're at the end of the list
+                        return@insertSeparators null
+                    }
+
+                    if (before == null) {
+                        // We're at the start of the list
+                        return@insertSeparators null
+                    }
+
+                    // Check between 2 items
+                    if (before.roundedStarCount > after.roundedStarCount) {
+                        if (after.roundedStarCount >= 1) {
+                            UiModel.SeparatorItem("${after.roundedStarCount}0.000+ stars")
+                        } else {
+                            UiModel.SeparatorItem("< 10.000+ stars")
+                        }
+                    } else {
+                        // No separators
+                        null
+                    }
+                }
+            }
     }
 
     override fun onCleared() {
