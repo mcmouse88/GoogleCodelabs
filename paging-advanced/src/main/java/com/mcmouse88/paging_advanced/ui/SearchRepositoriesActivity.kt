@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.mcmouse88.paging_advanced.Injector
 import com.mcmouse88.paging_advanced.databinding.ActivitySearchRepositoryBinding
-import com.mcmouse88.paging_advanced.model.RepoSearchResult
 
 // https://developer.android.com/codelabs/android-paging?hl=en#0
 
@@ -46,10 +44,10 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         _binding = ActivitySearchRepositoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bindState(
+       /* binding.bindState(
             uiState = viewModel.state,
             uiActions = viewModel.accept
-        )
+        )*/
     }
 
     /**
@@ -122,7 +120,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
     ) {
         setupScrollListener(onScrollChanged)
 
-        uiState
+        /*uiState
             .map(UiState::searchResult)
             .distinctUntilChanged()
             .observe(this@SearchRepositoriesActivity) { result ->
@@ -140,7 +138,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            }
+            }*/
     }
 
     private fun ActivitySearchRepositoryBinding.showEmptyList(show: Boolean) {
@@ -159,13 +157,13 @@ class SearchRepositoriesActivity : AppCompatActivity() {
                 val visibleItemCount = layoutManager.childCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                onScrollChanged(
+                /*onScrollChanged(
                     UiAction.Scroll(
                         visibleItemCount = visibleItemCount,
                         lastVisibleItemPosition = lastVisibleItem,
                         totalItemCount = totalItemCount
                     )
-                )
+                )*/
             }
         }
         list.addOnScrollListener(scrollListener)
