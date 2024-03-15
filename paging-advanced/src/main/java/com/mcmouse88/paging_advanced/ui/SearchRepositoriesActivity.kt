@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,8 +23,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.launch
 
 // https://developer.android.com/codelabs/android-paging?hl=en#0
@@ -35,7 +36,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         get() = _binding ?: error("ActivitySearchRepositoryBinding is null")
 
     private val viewModel by viewModels<SearchReposViewModel>(
-        factoryProducer = { Injector.provideViewModelFactory(this) }
+        factoryProducer = { Injector.provideViewModelFactory(owner = this, context = this) }
     )
 
     private val adapter: ReposAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -74,8 +75,9 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         )
 
         binding.list.addItemDecoration(decoration)
+        val header = ReposLoadStateAdapter { adapter.retry() }
         list.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = ReposLoadStateAdapter { adapter.retry() },
+            header = header,
             footer = ReposLoadStateAdapter { adapter.retry() }
         )
 
@@ -85,6 +87,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         )
 
         bindList(
+            header = header,
             uiState = uiState,
             pagingData = pagingData,
             onScrollChanged = uiActions
@@ -132,6 +135,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
     }
 
     private fun ActivitySearchRepositoryBinding.bindList(
+        header: ReposLoadStateAdapter,
         uiState: StateFlow<UiState>,
         pagingData: Flow<PagingData<UiModel>>,
         onScrollChanged: (UiAction.Scroll) -> Unit
@@ -145,10 +149,8 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         btnRetry.setOnClickListener { adapter.retry() }
 
         val notLoading = adapter.loadStateFlow
-            // Only emit when REFRESH LoadState for the paging source changes.
-            .distinctUntilChangedBy { it.source.refresh }
-            // Only react to cases where REFRESH completes i.e., NotLoading.
-            .map { it.source.refresh is LoadState.NotLoading }
+            .asRemotePresentationState()
+            .map { it == RemotePresentationState.PRESENTED }
 
         val hasNotScrolledForCurrentSearch = uiState
             .map { it.hasNotScrolledForCurrentSearch }
@@ -162,15 +164,25 @@ class SearchRepositoriesActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collect { loadState ->
-                val isListEmpty = loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                // Show a retry header if there was an error refreshing, and items were previously
+                // cached OR default to the default prepend state
+                header.loadState = loadState.mediator
+                    ?.refresh
+                    ?.takeIf { it is LoadState.Error && adapter.itemCount > 0 }
+                    ?: loadState.prepend
+
+                val isListEmpty = loadState.refresh is LoadState.NotLoading
+                        && adapter.itemCount == 0
                 // Show empty list
                 emptyList.isVisible = isListEmpty
-                // Only show the list if refresh succeeds
-                list.isVisible = !isListEmpty
-                // Show loading spinner during until load or refresh.
-                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                // Only show the list if refresh succeeds, either from the local db or the remote
+                list.isVisible = loadState.source.refresh is LoadState.NotLoading
+                        || loadState.mediator?.refresh is LoadState.NotLoading
+                // Show loading spinner during initial load or refresh
+                progressBar.isVisible = loadState.mediator?.refresh is LoadState.Loading
                 // Show the retry state if initial load or refresh fails.
-                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                btnRetry.isVisible =
+                    loadState.mediator?.refresh is LoadState.Error && adapter.itemCount == 0
 
                 // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
                 val errorState = loadState.source.append as? LoadState.Error
@@ -198,4 +210,42 @@ class SearchRepositoriesActivity : AppCompatActivity() {
             }
         }
     }
+}
+
+enum class RemotePresentationState {
+    INITIAL, REMOTE_LOADING, SOURCE_LOADING, PRESENTED
+}
+
+fun Flow<CombinedLoadStates>.asRemotePresentationState(): Flow<RemotePresentationState> {
+    return scan(RemotePresentationState.INITIAL) { state, loadState ->
+        when (state) {
+            RemotePresentationState.INITIAL -> {
+                when (loadState.mediator?.refresh) {
+                    is LoadState.Loading -> RemotePresentationState.REMOTE_LOADING
+                    else -> state
+                }
+            }
+
+            RemotePresentationState.REMOTE_LOADING -> {
+                when (loadState.source.refresh) {
+                    is LoadState.Loading -> RemotePresentationState.SOURCE_LOADING
+                    else -> state
+                }
+            }
+
+            RemotePresentationState.SOURCE_LOADING -> {
+                when (loadState.source.refresh) {
+                    is LoadState.NotLoading -> RemotePresentationState.PRESENTED
+                    else -> state
+                }
+            }
+
+            RemotePresentationState.PRESENTED -> {
+                when (loadState.mediator?.refresh) {
+                    is LoadState.Loading -> RemotePresentationState.REMOTE_LOADING
+                    else -> state
+                }
+            }
+        }
+    }.distinctUntilChanged()
 }

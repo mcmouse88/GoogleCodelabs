@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.mcmouse88.paging_advanced.data.GitHubRepository
+import com.mcmouse88.paging_advanced.data.toRepo
 import com.mcmouse88.paging_advanced.model.UiModel
 import com.mcmouse88.paging_advanced.model.roundedStarCount
 import kotlinx.coroutines.flow.Flow
@@ -96,7 +97,11 @@ class SearchReposViewModel(
 
     private fun searchRepo(queryString: String): Flow<PagingData<UiModel>> {
         return repository.getSearchResultStream(queryString)
-            .map { it.map(UiModel::RepoItem) }
+            .map {
+                it.map { entity ->
+                    UiModel.RepoItem(entity.toRepo())
+                }
+            }
             .map { pagingData ->
                 pagingData.insertSeparators { before, after ->
                     if (after == null) {

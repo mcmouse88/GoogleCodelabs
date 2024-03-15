@@ -15,6 +15,8 @@ import com.mcmouse88.advanced_compose_state.details.launchDetailsActivity
 import com.mcmouse88.advanced_compose_state.ui.theme.AdvancedStateComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+// https://developer.android.com/codelabs/jetpack-compose-advanced-state-side-effects#1
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

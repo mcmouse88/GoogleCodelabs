@@ -16,6 +16,8 @@ import com.mcmouse88.paging_basic.databinding.ActivityArticleBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+// https://developer.android.com/codelabs/android-paging-basics#0
+
 class ArticleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
