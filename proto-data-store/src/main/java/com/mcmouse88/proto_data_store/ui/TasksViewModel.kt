@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mcmouse88.proto_data_store.SortOrderOuterClass.SortOrder
+import com.mcmouse88.proto_data_store.UserPreferences
 import com.mcmouse88.proto_data_store.data.Task
 import com.mcmouse88.proto_data_store.data.TasksRepository
 import com.mcmouse88.proto_data_store.data.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -23,30 +23,27 @@ class TasksViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    // Keep the show completed filter as stream of changes
-    private val showCompletedFlow = MutableStateFlow(false)
-
-    // Keep the sort order as a stream of changes
-    private val sortOrderFlow = userPreferencesRepository.sortOrderFlow
+    private val userPreferencesFlow = userPreferencesRepository.userPreferencesFlow
 
     // Every time the sort order, the show completed filter or the list of tasks emit,
     // we should recreate the list of tasks
     private val tasksUiModelFlow = combine(
         repository.tasks,
-        showCompletedFlow,
-        sortOrderFlow
-    ) { tasks: List<Task>, showCompleted: Boolean, sortOrder: SortOrder ->
+        userPreferencesFlow
+    ) { tasks: List<Task>, preferences: UserPreferences ->
         return@combine TasksUiModel(
-            tasks = filterSortTasks(tasks, showCompleted, sortOrder),
-            showCompleted = showCompleted,
-            sortOrder = sortOrder
+            tasks = filterSortTasks(tasks, preferences.showCompleted, preferences.sortOrder),
+            showCompleted = preferences.showCompleted,
+            sortOrder = preferences.sortOrder
         )
     }
 
     val tasksUiModel = tasksUiModelFlow.asLiveData()
 
     fun showCompletedTasks(show: Boolean) {
-        showCompletedFlow.value = show
+        viewModelScope.launch {
+            userPreferencesRepository.updateShowCompleted(show)
+        }
     }
 
     fun enableSortByDeadline(enable: Boolean) {

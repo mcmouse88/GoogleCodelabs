@@ -58,8 +58,7 @@ class TasksActivity : AppCompatActivity() {
             TasksViewModelFactory(
                 repository = TasksRepository,
                 userPreferencesRepository = UserPreferencesRepository(
-                    userPreferencesStore = userPreferencesStore,
-                    context = this
+                    userPreferencesStore = userPreferencesStore
                 )
             )
         }
