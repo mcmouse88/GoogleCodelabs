@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":paging-advanced")
-
-
 pluginManagement {
     repositories {
         google()
@@ -32,5 +29,7 @@ include(
     ":testing-jetpack-compose",
     ":accessibility-in-jetpack-compose",
     ":advanced-compose-state",
-    ":paging-basic"
+    ":paging-basic",
+    ":paging-advanced",
+    ":proto-data-store"
 )
