@@ -3,12 +3,14 @@ package com.mcmouse88.proto_data_store.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.mcmouse88.proto_data_store.data.SortOrder
+import androidx.lifecycle.viewModelScope
+import com.mcmouse88.proto_data_store.SortOrderOuterClass.SortOrder
 import com.mcmouse88.proto_data_store.data.Task
 import com.mcmouse88.proto_data_store.data.TasksRepository
 import com.mcmouse88.proto_data_store.data.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 data class TasksUiModel(
     val tasks: List<Task>,
@@ -48,11 +50,15 @@ class TasksViewModel(
     }
 
     fun enableSortByDeadline(enable: Boolean) {
-        userPreferencesRepository.enableSortByDeadline(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByDeadline(enable)
+        }
     }
 
     fun enableSortByPriority(enable: Boolean) {
-        userPreferencesRepository.enableSortByPriority(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByPriority(enable)
+        }
     }
 
     private fun filterSortTasks(
@@ -69,12 +75,15 @@ class TasksViewModel(
 
         // sort the tasks
         return when (sortOrder) {
+            SortOrder.UNSPECIFIED -> filteredTasks
             SortOrder.NONE -> filteredTasks
             SortOrder.BY_DEADLINE -> filteredTasks.sortedByDescending { it.deadline }
             SortOrder.BY_PRIORITY -> filteredTasks.sortedBy { it.priority }
             SortOrder.BY_DEADLINE_AND_PRIORITY -> filteredTasks.sortedWith(
                 compareByDescending<Task> { it.deadline }.thenBy { it.priority }
             )
+            // We shouldn't get any other value
+            else -> error("$sortOrder not supported")
         }
     }
 }

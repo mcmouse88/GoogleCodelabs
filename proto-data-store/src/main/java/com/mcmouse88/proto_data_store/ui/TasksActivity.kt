@@ -6,9 +6,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import androidx.datastore.migrations.SharedPreferencesMigration
+import androidx.datastore.migrations.SharedPreferencesView
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.mcmouse88.proto_data_store.SortOrderOuterClass.SortOrder
 import com.mcmouse88.proto_data_store.UserPreferences
-import com.mcmouse88.proto_data_store.data.SortOrder
 import com.mcmouse88.proto_data_store.data.TasksRepository
 import com.mcmouse88.proto_data_store.data.UserPreferencesRepository
 import com.mcmouse88.proto_data_store.data.UserPreferencesSerializer
@@ -22,8 +24,28 @@ private const val SORT_ORDER_KEY = "sort_order"
 
 private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
     fileName = DATA_STORE_FILE_NAME,
-    serializer = UserPreferencesSerializer
+    serializer = UserPreferencesSerializer,
+    produceMigrations = { context ->
+        listOf(sharedPrefsMigration(context))
+    }
 )
+
+private fun sharedPrefsMigration(context: Context) = SharedPreferencesMigration(
+    context = context,
+    USER_PREFERENCES_NAME
+) { sharedPrefs: SharedPreferencesView, currentData: UserPreferences ->
+    // Define the mapping from SharedPreferences to UserPreferences
+    if (currentData.sortOrder == SortOrder.UNSPECIFIED) {
+        currentData.toBuilder().setSortOrder(
+            SortOrder.valueOf(
+                sharedPrefs.getString(SORT_ORDER_KEY, SortOrder.NONE.name)
+                    ?: SortOrder.NONE.name
+            )
+        ).build()
+    } else {
+        currentData
+    }
+}
 
 class TasksActivity : AppCompatActivity() {
 

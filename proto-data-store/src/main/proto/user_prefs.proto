@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "sort_order.proto";
 
 option java_package = "com.mcmouse88.proto_data_store";
 option java_multiple_files = true;
@@ -6,4 +7,7 @@ option java_multiple_files = true;
 message UserPreferences {
   // filter for showing / hiding completed tasks
   bool show_completed = 1;
+
+  // user selected tasks sorting order
+  SortOrder sort_order = 2;
 }
