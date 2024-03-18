@@ -56,11 +56,14 @@ dependencies {
     implementation(libs.bundles.lifecycle)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.ktx)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.google.protobuf.javalite)
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:21.7"
+        artifact = "com.google.protobuf:protoc:3.21.7"
     }
 
     // Generates the java Protobuf-lite code for the Protobufs in this project. See
