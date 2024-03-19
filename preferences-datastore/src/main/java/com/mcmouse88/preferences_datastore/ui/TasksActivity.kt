@@ -1,13 +1,21 @@
 package com.mcmouse88.preferences_datastore.ui
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mcmouse88.preferences_datastore.data.SortOrder
 import com.mcmouse88.preferences_datastore.data.TasksRepository
 import com.mcmouse88.preferences_datastore.data.UserPreferencesRepository
 import com.mcmouse88.preferences_datastore.databinding.ActivityTasksBinding
+
+private const val USER_PREFERENCES_NAME = "user_preferences"
+
+private val Context.dataStore by preferencesDataStore(
+    name = USER_PREFERENCES_NAME
+)
 
 class TasksActivity : AppCompatActivity() {
 
@@ -19,7 +27,7 @@ class TasksActivity : AppCompatActivity() {
         factoryProducer = {
             TasksViewModelFactory(
                 repository = TasksRepository,
-                userPreferencesRepository = UserPreferencesRepository.getInstance(this)
+                userPreferencesRepository = UserPreferencesRepository(dataStore,this)
             )
         }
     )
