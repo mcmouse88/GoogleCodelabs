@@ -55,4 +55,5 @@ dependencies {
     implementation(libs.bundles.lifecycle)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.datastore.preferences)
 }
