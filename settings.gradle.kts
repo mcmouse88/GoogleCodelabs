@@ -31,5 +31,6 @@ include(
     ":advanced-compose-state",
     ":paging-basic",
     ":paging-advanced",
-    ":proto-data-store"
+    ":proto-data-store",
+    ":preferences-datastore"
 )
