@@ -8,7 +8,6 @@ import com.mcmouse88.preferences_datastore.data.SortOrder
 import com.mcmouse88.preferences_datastore.data.Task
 import com.mcmouse88.preferences_datastore.data.TasksRepository
 import com.mcmouse88.preferences_datastore.data.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -23,19 +22,14 @@ class TasksViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    // Keep the show completed filter as stream of changes
-    private val showCompletedFlow = MutableStateFlow(false)
-
-    // Keep the sort order as a stream of changes
-    private val sortOrderFlow = userPreferencesRepository.sortOrderFlow
+    private val userPreferencesFlow = userPreferencesRepository.userPreferencesFlow
 
     // Every time the sort order, the show completed filter or the list of tasks emit,
     // we should recreate the list of tasks
     private val tasksUiModelFlow = combine(
         repository.tasks,
-        showCompletedFlow,
-        sortOrderFlow
-    ) { tasks: List<Task>, showCompleted: Boolean, sortOrder: SortOrder ->
+        userPreferencesFlow
+    ) { tasks: List<Task>, (showCompleted: Boolean, sortOrder: SortOrder) ->
         return@combine TasksUiModel(
             tasks = filterSortTasks(tasks, showCompleted, sortOrder),
             showCompleted = showCompleted,
@@ -46,7 +40,9 @@ class TasksViewModel(
     val tasksUiModel = tasksUiModelFlow.asLiveData()
 
     fun showCompletedTasks(show: Boolean) {
-        showCompletedFlow.value = show
+        viewModelScope.launch {
+            userPreferencesRepository.updateShowCompleted(show)
+        }
     }
 
     fun enableSortByDeadline(enable: Boolean) {

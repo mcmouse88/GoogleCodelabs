@@ -37,7 +37,7 @@ class TasksActivity : AppCompatActivity() {
         factoryProducer = {
             TasksViewModelFactory(
                 repository = TasksRepository,
-                userPreferencesRepository = UserPreferencesRepository(dataStore,this)
+                userPreferencesRepository = UserPreferencesRepository(dataStore)
             )
         }
     )
