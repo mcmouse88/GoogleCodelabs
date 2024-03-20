@@ -3,12 +3,14 @@ package com.mcmouse88.preferences_datastore.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.mcmouse88.preferences_datastore.data.SortOrder
 import com.mcmouse88.preferences_datastore.data.Task
 import com.mcmouse88.preferences_datastore.data.TasksRepository
 import com.mcmouse88.preferences_datastore.data.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 data class TasksUiModel(
     val tasks: List<Task>,
@@ -48,11 +50,15 @@ class TasksViewModel(
     }
 
     fun enableSortByDeadline(enable: Boolean) {
-        userPreferencesRepository.enableSortByDeadline(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByDeadline(enable)
+        }
     }
 
     fun enableSortByPriority(enable: Boolean) {
-        userPreferencesRepository.enableSortByPriority(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByPriority(enable)
+        }
     }
 
     private fun filterSortTasks(

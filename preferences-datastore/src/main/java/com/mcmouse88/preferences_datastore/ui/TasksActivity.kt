@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mcmouse88.preferences_datastore.data.SortOrder
@@ -13,8 +14,17 @@ import com.mcmouse88.preferences_datastore.databinding.ActivityTasksBinding
 
 private const val USER_PREFERENCES_NAME = "user_preferences"
 
+/**
+ * Note: keys are only migrated from SharedPreferences once, so you should discontinue using
+ * the old SharedPreferences once the code is migrated to DataStore.
+ */
 private val Context.dataStore by preferencesDataStore(
-    name = USER_PREFERENCES_NAME
+    name = USER_PREFERENCES_NAME,
+    produceMigrations = { context ->
+        // Since we're migrating from SharedPreferences, add a migration based on the
+        // SharedPreferences name
+        listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
+    }
 )
 
 class TasksActivity : AppCompatActivity() {
