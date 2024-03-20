@@ -114,6 +114,9 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 androidx-datastore = { module = "androidx.datastore:datastore", version = "1.0.0" }
 google-protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version = "3.22.3" }
 
+# Preferences Datastore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
+
 # Desugaring
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4" }
 
