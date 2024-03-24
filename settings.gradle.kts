@@ -32,5 +32,8 @@ include(
     ":paging-basic",
     ":paging-advanced",
     ":proto-data-store",
-    ":preferences-datastore"
+    ":preferences-datastore",
+    ":gesture-navigation-edge",
+    ":gesture-navigation-edge:app",
+    ":gesture-navigation-edge:common"
 )
